@@ -3,9 +3,7 @@
 # @Software : PyCharm
 import argparse
 import numpy as np
-from torchvision import transforms, datasets
 import os
-import onnxruntime as rt
 import re
 import PIL.Image as Image
 
@@ -19,7 +17,7 @@ def img_preprocess(pil_img):
     img_ndarray = np.asarray(pil_img) / 255
     return img_ndarray
 
-def write_vnn_spec(img_pre, imagename, eps, dir_path, prefix="spec", data_lb=0, data_ub=1, n_class=1, mean=0.0, std=1.0, negate_spec=False):
+def write_vnn_spec(img_pre, imagename, eps, dir_path, prefix="spec", data_lb=0, data_ub=1, n_class=1, mean=0.0, std=1.0, negate_spec=False,csv=''):
     x = Image.open(img_pre + imagename)
     x = np.array(x) / 255
     x_lb = np.clip(x - eps, data_lb, data_ub)
@@ -66,6 +64,18 @@ def write_vnn_spec(img_pre, imagename, eps, dir_path, prefix="spec", data_lb=0, 
             for i in range(n_class):
                 f.write(f"\t(and (>= Y_1 1438))\n")
             f.write(f"))\n")
+    csv = csv
+    if not os.path.exists(csv):
+        os.system(r"touch {}".format(csv))
+    csvFile = open(csv, "w")
+    network_path = '../net/onnx/'
+    vnnlib_path = '../specs/vnnlib/'
+    timeout = 300
+    for network in os.listdir(network_path):
+        network = os.path.join(network_path, network)
+        for vnnLibFile in os.listdir(vnnlib_path):
+            print(f"{network},{vnnLibFile},{timeout}", file=csvFile)
+    csvFile.close()
     return spec_name
 
 def main():
@@ -76,36 +86,19 @@ def main():
     parser.add_argument('--std', nargs='+', type=float, default=1.0,
                         help='the standard deviation used to normalize the data with')
     parser.add_argument('--csv', type=str, default="../Carvana-unet_instances.csv", help='csv file to write to')
-    parser.add_argument("--make_vnnlib", action="store_true", default=False, help='make .vnnlib file')
-    parser.add_argument("--make_csv", action="store_true", default=True, help='make .csv file, after .vnnlib file created')
 
     args = parser.parse_args()
 
-    if args.make_vnnlib:
-        '''get the list of success images'''
-        sucess_images_path = '../dataset/succeeds_mask'
-        list = get_sucess_images(sucess_images_path)
-        for index in range(len(list)):
-            img_file_pre = r'../dataset/test_images/'
-            mean = np.array(args.mean).reshape((1, -1, 1, 1)).astype(np.float32)
-            std = np.array(args.std).reshape((1, -1, 1, 1)).astype(np.float32)
-            #open image and normalize
-            write_vnn_spec(img_file_pre, list[index], args.epsilon, dir_path='../specs/vnnlib', prefix='spec', data_lb=0,
-
-                                    data_ub=1, n_class=2, mean=mean, std=std, negate_spec=True)
-    if args.make_csv:
-        csv = args.csv
-        if not os.path.exists(csv):
-            os.system(r"touch {}".format(csv))
-        csvFile = open(csv, "w")
-        network_path = '../net/onnx/'
-        vnnlib_path = '../specs/vnnlib/'
-        timeout = 300
-        for network in os.listdir(network_path):
-            network = os.path.join(network_path, network)
-            for vnnLibFile in os.listdir(vnnlib_path):
-                print(f"{network},{vnnLibFile},{timeout}", file=csvFile)
-        csvFile.close()
+    '''get the list of success images'''
+    sucess_images_path = '../dataset/succeeds_mask'
+    list = get_sucess_images(sucess_images_path)
+    for index in range(len(list)):
+        img_file_pre = r'../dataset/test_images/'
+        mean = np.array(args.mean).reshape((1, -1, 1, 1)).astype(np.float32)
+        std = np.array(args.std).reshape((1, -1, 1, 1)).astype(np.float32)
+        #open image and normalize
+        write_vnn_spec(img_file_pre, list[index], args.epsilon, dir_path='../specs/vnnlib', prefix='spec', data_lb=0,
+                        data_ub=1, n_class=2, mean=mean, std=std, negate_spec=True,csv=args.csv)
 
 
 if __name__ == "__main__":

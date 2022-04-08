@@ -58,11 +58,11 @@ def write_vnn_spec(img_pre, imagename, eps, dir_path, prefix="spec", data_lb=0, 
         f.write(f"\n; Definition of output constraints\n")
         if negate_spec:
             for i in range(n_class-1):
-                f.write(f"(assert (<= Y_1 1438))\n")
+                f.write(f"(assert (<= Y_1 1166))\n")
         else:
             f.write(f"(assert (or\n")
             for i in range(n_class):
-                f.write(f"\t(and (>= Y_1 1438))\n")
+                f.write(f"\t(and (>= Y_1 1166))\n")
             f.write(f"))\n")
     csv = csv
     if not os.path.exists(csv):

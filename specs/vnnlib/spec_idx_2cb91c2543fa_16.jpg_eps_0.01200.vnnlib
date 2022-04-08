@@ -13122,4 +13122,4 @@
 (assert (>= X_4370 0.76447059))
 
 ; Definition of output constraints
-(assert (<= Y_1 1438))
+(assert (<= Y_1 1166))

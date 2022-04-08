@@ -82,11 +82,13 @@ def write_vnn_spec(img_pre, imagename, epslion, dir_path, prefix="spec", data_lb
 def main():
     parser = argparse.ArgumentParser(description='VNN spec generator',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument('--seed', type=int, help='random seed.',required=True)
     parser.add_argument('--epsilon', type=float, default=[0.012,0.015], help='The epsilon for L_infinity perturbation')
     parser.add_argument('--mean', nargs='+', type=float, default=0.0, help='the mean used to normalize the data with')
     parser.add_argument('--std', nargs='+', type=float, default=1.0,
                         help='the standard deviation used to normalize the data with')
     parser.add_argument('--csv', type=str, default="../Carvana-unet_instances.csv", help='csv file to write to')
+
 
     args = parser.parse_args()
 

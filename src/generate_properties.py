@@ -6,6 +6,7 @@ import numpy as np
 import os
 import re
 import PIL.Image as Image
+import sys
 
 def get_sucess_images(path):
     list = []
@@ -80,28 +81,22 @@ def write_vnn_spec(img_pre, imagename, epslion, dir_path, prefix="spec", data_lb
     return spec_name
 
 def main():
-    parser = argparse.ArgumentParser(description='VNN spec generator',
-                                     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('--seed', type=int, help='random seed.',required=True)
-    parser.add_argument('--epsilon', type=float, default=[0.012,0.015], help='The epsilon for L_infinity perturbation')
-    parser.add_argument('--mean', nargs='+', type=float, default=0.0, help='the mean used to normalize the data with')
-    parser.add_argument('--std', nargs='+', type=float, default=1.0,
-                        help='the standard deviation used to normalize the data with')
-    parser.add_argument('--csv', type=str, default="../Carvana-unet_instances.csv", help='csv file to write to')
-
-
-    args = parser.parse_args()
+    seed = sys.argv[1]
+    mean = 0.0
+    std = 1.0
+    epsilon = [0.012,0.015]
+    csv = "../Carvana-unet_instances.csv"
 
     '''get the list of success images'''
     sucess_images_path = '../dataset/succeeds_mask'
     list = get_sucess_images(sucess_images_path)
     for index in range(len(list)):
         img_file_pre = r'../dataset/test_images/'
-        mean = np.array(args.mean).reshape((1, -1, 1, 1)).astype(np.float32)
-        std = np.array(args.std).reshape((1, -1, 1, 1)).astype(np.float32)
+        mean = np.array(mean).reshape((1, -1, 1, 1)).astype(np.float32)
+        std = np.array(std).reshape((1, -1, 1, 1)).astype(np.float32)
         #open image and normalize
-        write_vnn_spec(img_file_pre, list[index], args.epsilon, dir_path='../specs/vnnlib', prefix='spec', data_lb=0,
-                        data_ub=1, n_class=2, mean=mean, std=std, negate_spec=True,csv=args.csv)
+        write_vnn_spec(img_file_pre, list[index], epsilon, dir_path='../specs/vnnlib', prefix='spec', data_lb=0,
+                        data_ub=1, n_class=2, mean=mean, std=std, negate_spec=True,csv=csv)
 
 
 if __name__ == "__main__":

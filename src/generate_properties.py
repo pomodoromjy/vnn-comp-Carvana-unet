@@ -7,6 +7,8 @@ import os
 import re
 import PIL.Image as Image
 import sys
+import torch
+import numpy.random as random
 
 def get_sucess_images(path):
     list = []
@@ -82,6 +84,12 @@ def write_vnn_spec(img_pre, imagename, epslion, dir_path, prefix="spec", data_lb
 
 def main():
     seed = sys.argv[1]
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    if device == 'cuda':
+        torch.cuda.manual_seed_all(seed)
+    torch.random.manual_seed(seed)
+    torch.manual_seed(int(seed))
+    # random.seed(seed)
     mean = 0.0
     std = 1.0
     epsilon = [0.012,0.015]

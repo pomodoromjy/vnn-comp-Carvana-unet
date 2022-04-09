@@ -88,8 +88,8 @@ def main():
     if device == 'cuda':
         torch.cuda.manual_seed_all(seed)
     torch.random.manual_seed(seed)
-    torch.manual_seed(int(seed))
-    # random.seed(seed)
+    torch.manual_seed(seed)
+    random.seed(int(seed))
     mean = 0.0
     std = 1.0
     epsilon = [0.012,0.015]

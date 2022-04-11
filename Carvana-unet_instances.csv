@@ -1,11 +1,7 @@
-../net/onnx/unet_simp_small.onnx,spec_idx_0cdf5b5d0ce1_16.jpg_eps_0.01200.vnnlib,300
-../net/onnx/unet_simp_small.onnx,spec_idx_0cdf5b5d0ce1_16.jpg_eps_0.01500.vnnlib,300
 ../net/onnx/unet_simp_small.onnx,spec_idx_0d1a9caf4350_16.jpg_eps_0.01200.vnnlib,300
 ../net/onnx/unet_simp_small.onnx,spec_idx_0d1a9caf4350_16.jpg_eps_0.01500.vnnlib,300
 ../net/onnx/unet_simp_small.onnx,spec_idx_1258cf954183_16.jpg_eps_0.01200.vnnlib,300
 ../net/onnx/unet_simp_small.onnx,spec_idx_1258cf954183_16.jpg_eps_0.01500.vnnlib,300
-../net/onnx/unet_simp_small.onnx,spec_idx_16f0ec26d608_16.jpg_eps_0.01200.vnnlib,300
-../net/onnx/unet_simp_small.onnx,spec_idx_16f0ec26d608_16.jpg_eps_0.01500.vnnlib,300
 ../net/onnx/unet_simp_small.onnx,spec_idx_1adaeb44f109_16.jpg_eps_0.01200.vnnlib,300
 ../net/onnx/unet_simp_small.onnx,spec_idx_1adaeb44f109_16.jpg_eps_0.01500.vnnlib,300
 ../net/onnx/unet_simp_small.onnx,spec_idx_1ae8a68a40e4_16.jpg_eps_0.01200.vnnlib,300
@@ -80,7 +76,5 @@
 ../net/onnx/unet_simp_small.onnx,spec_idx_e1d2c25f3510_16.jpg_eps_0.01500.vnnlib,300
 ../net/onnx/unet_simp_small.onnx,spec_idx_ed8472086df8_16.jpg_eps_0.01200.vnnlib,300
 ../net/onnx/unet_simp_small.onnx,spec_idx_ed8472086df8_16.jpg_eps_0.01500.vnnlib,300
-../net/onnx/unet_simp_small.onnx,spec_idx_f8b6f4c39204_16.jpg_eps_0.01200.vnnlib,300
-../net/onnx/unet_simp_small.onnx,spec_idx_f8b6f4c39204_16.jpg_eps_0.01500.vnnlib,300
 ../net/onnx/unet_simp_small.onnx,spec_idx_fa613ac8eac5_16.jpg_eps_0.01200.vnnlib,300
 ../net/onnx/unet_simp_small.onnx,spec_idx_fa613ac8eac5_16.jpg_eps_0.01500.vnnlib,300

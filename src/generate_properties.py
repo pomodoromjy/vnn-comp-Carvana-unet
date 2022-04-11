@@ -10,15 +10,19 @@ import sys
 import torch
 import numpy.random as random
 
-def get_sucess_images(path):
+def get_random_images(path,random,length,seed):
     list = []
     for filename in os.listdir(path):
         list.append(filename)
-    return list
-
-def img_preprocess(pil_img):
-    img_ndarray = np.asarray(pil_img) / 255
-    return img_ndarray
+    random_sel_list = []
+    if random:
+        np.random.seed(seed)
+        random_sel_list = np.random.choice(list,length,replace=False)
+    else:
+        for index in range(len(list)):
+            while len(random_sel_list) < length:
+                random_sel_list.append(list[index])
+    return random_sel_list
 
 def write_vnn_spec(img_pre, imagename, epslion, dir_path, prefix="spec", data_lb=0, data_ub=1, n_class=1, mean=0.0, std=1.0, negate_spec=False,csv=''):
     for eps in epslion:
@@ -32,15 +36,7 @@ def write_vnn_spec(img_pre, imagename, epslion, dir_path, prefix="spec", data_lb
         if not os.path.exists(dir_path):
             os.mkdir(dir_path)
 
-        if np.all(mean==0.) and np.all(std==1.):
-            spec_name = f"{prefix}_idx_{imagename}_eps_{eps:.5f}.vnnlib"
-        else:
-            existing_specs = os.listdir(dir_path)
-            competing_norm_ids = [int(re.match(f"{prefix}_idx_{imagename}_eps_{eps:.5f}_n([0-9]+).vnnlib",spec).group(1)) for spec in existing_specs if spec.startswith(f"{prefix}_idx_{index}_eps_{eps:.5f}_n")]
-            norm_id = 1 if len(competing_norm_ids) == 0 else max(competing_norm_ids)+1
-            spec_name = f"{prefix}_idx_{imagename}_eps_{eps:.5f}_n{norm_id}.vnnlib"
-
-
+        spec_name = f"{prefix}_idx_{imagename}_eps_{eps:.5f}.vnnlib"
         spec_path = os.path.join(dir_path, spec_name)
 
         with open(spec_path, "w") as f:
@@ -83,13 +79,7 @@ def write_vnn_spec(img_pre, imagename, epslion, dir_path, prefix="spec", data_lb
     return spec_name
 
 def main():
-    seed = sys.argv[1]
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    if device == 'cuda':
-        torch.cuda.manual_seed_all(seed)
-    torch.random.manual_seed(seed)
-    torch.manual_seed(seed)
-    random.seed(int(seed))
+    seed = int(sys.argv[1])
     mean = 0.0
     std = 1.0
     epsilon = [0.012,0.015]
@@ -97,7 +87,11 @@ def main():
 
     '''get the list of success images'''
     sucess_images_path = '../dataset/succeeds_mask'
-    list = get_sucess_images(sucess_images_path)
+    list = get_random_images(sucess_images_path,random=True,length=40,seed=seed)
+    print("list:",list)
+    # f = open("list_1.txt", "w")
+    # f.writelines(list)
+    # f.close()
     for index in range(len(list)):
         img_file_pre = r'../dataset/test_images/'
         mean = np.array(mean).reshape((1, -1, 1, 1)).astype(np.float32)
